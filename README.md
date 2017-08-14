@@ -3,6 +3,7 @@ A Unity library for jump starting your VR/AR project with Leap Motion integratio
 
 # Table of Contents
 * [Introduction](#introduction)
+* [Download](#download)
 * [Documentation](#documentation)
 * [Usage](#usage)
   * [Standard Libraries](#standard-libraries)
@@ -12,6 +13,9 @@ A Unity library for jump starting your VR/AR project with Leap Motion integratio
 
 # Introduction
 This library contains all the necessary assets for building AR/VR-based apps with the Leap Motion. It includes [the standard assets provided by Leap Motion](https://developer.leapmotion.com/unity) as well as a couple utilities for even easier integration.
+
+# Download
+### You can checkout the [releases](https://github.com/tejashah88/Leap-Motion-Starter-Pack/releases) or simply download the latest package [here](https://github.com/tejashah88/Leap-Motion-Starter-Pack/releases/download/v0.0.1-alpha/Leap_Motion_Starter_Pack_0.0.1_alpha.unitypackage). Alternatively, you can grab the source [here](https://github.com/tejashah88/Leap-Motion-Starter-Pack/archive/v0.0.1-alpha.zip).
 
 # Documentation
 * Standard library
@@ -151,4 +155,4 @@ public void One(Hand presentHand) {
 ```
 
 # Changelog
-* v0.0.1 - First release
+* v0.0.1-alpha - First release
