@@ -25,7 +25,7 @@ This library contains all the necessary assets for building AR/VR-based apps wit
 
 # Usage
 ## Standard Libraries
-The standard libraries are located in [Assets/LeapMotion/Core](Assets/LeapMotion/Core) and [Assets/LeapMotion/Modules](Assets/LeapMotion/Modules). The "Core" folder has the barebone basics to implement Leap Motion integration while the "Modules" folder contains the extra libraries to allow you to interact with other objects, auto-rig different hand models, and optimize rendering calls. You can check out the respective documentation at the [Documentation](#documentation) section below.
+The standard libraries are located in [Assets/LeapMotion/Core](Assets/LeapMotion/Core) and [Assets/LeapMotion/Modules](Assets/LeapMotion/Modules). The "Core" folder has the barebone basics to implement Leap Motion integration while the "Modules" folder contains the extra libraries to allow you to interact with other objects, auto-rig different hand models, and optimize rendering calls. You can check out the respective documentation at the [Documentation](#documentation) section above.
 
 ## Xtra Libraries
 The Xtra libraries contain a set of utility asssets (located in [Assets/LeapMotion/Xtra](Assets/LeapMotion/Xtra)), including prefabs and scripts to accelerate your VR/AR development. In the prefabs folder is an head-mounted VR rig that shows only hands (i.e. no arms) [in the capsule form](https://github.com/leapmotion/UnityModules/wiki/Core#capsule-hands).
@@ -60,7 +60,7 @@ For implementing the `TwoHandInterface`, you'll need to implement the following 
 
 There are two ways to go about implementing the said methods above. One is to use the provided utility classes named `State<T>`, `StateProcessor<T>`, `StateChangeProcessor<T>`, and `StateEventProcessor<T>`. With the `StateChangeProcessor<T>`, you can easily define simple rules for when a particular state should change and what state should it already be in order to change the state. With the `StateEventProcessor<T>`, you can also easily add state handling without worrying about setting up your own. The `StateProcessor<T>` helps to bind both classes into one nice package so that you can simply add the `ProcessState` method to any of the methods mentioned above. The other way is to implement state handling manually, if the provided classes aren't enough and you want more flexibility with your app.
 
-As far as accessing the hand object properties, you can refer to the [Hand class](https://developer.leapmotion.com/documentation/csharp/api/Leap.Hand.html) and the [Vector class](https://developer.leapmotion.com/documentation/csharp/api/Leap.Vector.html) (Note that this class is **not** the same as [Unity's Vector3 class](https://docs.unity3d.com/ScriptReference/Vector3.html)).
+As far as accessing the hand object properties, you can refer to the [Hand class](https://developer.leapmotion.com/documentation/csharp/api/Leap.Hand.html) and the [Vector class](https://developer.leapmotion.com/documentation/csharp/api/Leap.Vector.html) for more information (Note that Leap Motion's Vector class is **not** the same as [Unity's Vector3 class](https://docs.unity3d.com/ScriptReference/Vector3.html)).
 
 ## Examples
 
