@@ -3,15 +3,25 @@ A Unity library for jump starting your VR/AR project with Leap Motion integratio
 
 # Table of Contents
 * [Introduction](#introduction)
+* [Documentation](#documentation)
 * [Usage](#usage)
   * [Standard Libraries](#standard-libraries)
   * [Xtra Libraries](#xtra-libraries)
   * [Examples](#examples)
-* [Documentation](#documentation)
 * [Changelog](#changelog)
 
 # Introduction
 This library contains all the necessary assets for building AR/VR-based apps with the Leap Motion. It includes [the standard assets provided by Leap Motion](https://developer.leapmotion.com/unity) as well as a couple utilities for even easier integration.
+
+# Documentation
+* Standard library
+  * Core Assets - v4.2.1 [[docs](https://github.com/leapmotion/UnityModules/wiki/Core)]
+  * Interaction Engine - v1.0.1 [[docs](https://github.com/leapmotion/UnityModules/wiki/Interaction-Engine)]
+  * Hands Module - v2.1.2 [[docs](https://github.com/leapmotion/UnityModules/wiki/Hands-Module)]
+  * Graphic Renderer - v0.1.0 [[docs](https://github.com/leapmotion/UnityModules/wiki/Graphic-Renderer)]
+* C# Docs - v3.2 [[docs](https://developer.leapmotion.com/documentation/csharp/index.html)]
+  * Hand class - [[docs](https://developer.leapmotion.com/documentation/csharp/api/Leap.Hand.html)]
+  * Vector class - [[docs](https://developer.leapmotion.com/documentation/csharp/api/Leap.Vector.html)]
 
 # Usage
 ## Standard Libraries
@@ -139,16 +149,6 @@ public void One(Hand presentHand) {
   }
 }
 ```
-
-# Documentation
-* Standard library
-  * Core Assets - v4.2.1 [[docs](https://github.com/leapmotion/UnityModules/wiki/Core)]
-  * Interaction Engine - v1.0.1 [[docs](https://github.com/leapmotion/UnityModules/wiki/Interaction-Engine)]
-  * Hands Module - v2.1.2 [[docs](https://github.com/leapmotion/UnityModules/wiki/Hands-Module)]
-  * Graphic Renderer - v0.1.0 [[docs](https://github.com/leapmotion/UnityModules/wiki/Graphic-Renderer)]
-* C# Docs - v3.2 [[docs](https://developer.leapmotion.com/documentation/csharp/index.html)]
-  * Hand class - [[docs](https://developer.leapmotion.com/documentation/csharp/api/Leap.Hand.html)]
-  * Vector class - [[docs](https://developer.leapmotion.com/documentation/csharp/api/Leap.Vector.html)]
 
 # Changelog
 * v0.0.1 - First release
