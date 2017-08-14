@@ -35,18 +35,18 @@ For implementing the `OneHandInterface`, you'll need to implement the following 
   * *fired when one hand has just entered the scene*
 
 For implementing the `TwoHandInterface`, you'll need to implement the following **additional** methods:
-* TwoToZero(float transLife)[1]
+* TwoToZero(float transLife)<sup>1</sup>
   * *fired when **exactly** both hands have just left the scene*
 * TwoToOne(Hand futureHand, float transLife)
   * *fired when one of the hands has just left the scene*
 * Two(Hand[] presentHands)
   * *fired when two hands are detected within the scene*
-* ZeroToTwo(Hand[] futureHands, float transLife)[1]
+* ZeroToTwo(Hand[] futureHands, float transLife)<sup>1</sup>
   * *fired when **exactly** two hands have just entered the scene*
 * OneToTwo(Hand[] futureHands, float transLife)
   * *fired when another hand has just entered the scene*
 
-[1]: This event is rarely fired but it's best to implement a handler for it anyways.
+<sup>1</sup>: This event is rarely fired but it's best to implement a handler for it anyways.
 
 There are two ways to go about implementing the said methods above. One is to use the provided utility classes named `State<T>`, `StateProcessor<T>`, `StateChangeProcessor<T>`, and `StateEventProcessor<T>`. With the `StateChangeProcessor<T>`, you can easily define simple rules for when a particular state should change and what state should it already be in order to change the state. With the `StateEventProcessor<T>`, you can also easily add state handling without worrying about setting up your own. The `StateProcessor<T>` helps to bind both classes into one nice package so that you can simply add the `ProcessState` method to any of the methods mentioned above. The other way is to implement state handling manually, if the provided classes aren't enough and you want more flexibility with your app.
 
