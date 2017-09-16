@@ -10,7 +10,9 @@
 using UnityEngine;
 using UnityEngine.Assertions;
 using System;
+using System.IO;
 using System.Collections.Generic;
+using Leap.Unity.RuntimeGizmos;
 using Leap.Unity.Query;
 
 namespace Leap.Unity {
@@ -32,7 +34,7 @@ namespace Leap.Unity {
     /// <summary>
     /// Utility extension to swap the elements at index a and index b.
     /// </summary>
-    public static void Swap<T>(this List<T> list, int a, int b) {
+    public static void Swap<T>(this IList<T> list, int a, int b) {
       T temp = list[a];
       list[a] = list[b];
       list[b] = temp;
@@ -55,6 +57,15 @@ namespace Leap.Unity {
       int j = array.Length;
       while (i < mid) {
         array.Swap(i++, --j);
+      }
+    }
+
+    /// <summary>
+    /// Shuffle the given list into a different permutation.
+    /// </summary>
+    public static void Shuffle<T>(this IList<T> list) {
+      for (int i = 0; i < list.Count; i++) {
+        Utils.Swap(list, i, UnityEngine.Random.Range(0, list.Count));
       }
     }
 
@@ -128,10 +139,6 @@ namespace Leap.Unity {
       return false;
     }
 
-    public static float Area(this Rect rect) {
-      return rect.width * rect.height;
-    }
-
     public static bool IsActiveRelativeToParent(this Transform obj, Transform parent) {
       Assert.IsTrue(obj.IsChildOf(parent));
 
@@ -146,6 +153,86 @@ namespace Leap.Unity {
       }
     }
 
+    /// <summary>
+    /// Given a list of comparable types, return an ordering that orders the
+    /// elements into sorted order.  The ordering is a list of indices where each
+    /// index refers to the element located at that index in the original list.
+    /// </summary>
+    public static List<int> GetSortedOrder<T>(this IList<T> list) where T : IComparable<T> {
+      Assert.IsNotNull(list);
+
+      List<int> ordering = new List<int>();
+      for (int i = 0; i < list.Count; i++) {
+        ordering.Add(i);
+      }
+
+      ordering.Sort((a, b) => list[a].CompareTo(list[b]));
+
+      return ordering;
+    }
+
+    /// <summary>
+    /// Given a list and an ordering, order the list according to the ordering.
+    /// This method assumes the ordering is a valid ordering.
+    /// </summary>
+    public static void ApplyOrdering<T>(this IList<T> list, List<int> ordering) {
+      Assert.IsNotNull(list);
+      Assert.IsNotNull(ordering);
+      Assert.AreEqual(list.Count, ordering.Count, "List must be the same length as the ordering.");
+
+      List<T> copy = Pool<List<T>>.Spawn();
+      try {
+        copy.AddRange(list);
+        for (int i = 0; i < list.Count; i++) {
+          list[i] = copy[ordering[i]];
+        }
+      } finally {
+        copy.Clear();
+        Pool<List<T>>.Recycle(copy);
+      }
+    }
+
+    public static string MakeRelativePath(string relativeTo, string path) {
+      if (string.IsNullOrEmpty(relativeTo)) throw new ArgumentNullException("relativeTo");
+      if (string.IsNullOrEmpty(path)) throw new ArgumentNullException("path");
+
+      Uri relativeToUri = new Uri(relativeTo);
+      Uri pathUri = new Uri(path);
+
+      if (relativeToUri.Scheme != pathUri.Scheme) { return path; } // path can't be made relative.
+
+      Uri relativeUri = relativeToUri.MakeRelativeUri(pathUri);
+      string relativePath = Uri.UnescapeDataString(relativeUri.ToString());
+
+      if (pathUri.Scheme.Equals("file", StringComparison.InvariantCultureIgnoreCase)) {
+        relativePath = relativePath.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
+      }
+
+      return relativePath;
+    }
+
+    #endregion
+
+    #region String Utils
+    /// <summary>
+    /// Trims a specific number of characters off of the end of the
+    /// provided string.  When the number of trimmed characters is
+    /// equal to or greater than the length of the string, the empty
+    /// string is always returned.
+    /// </summary>
+    public static string TrimEnd(this string str, int characters) {
+      return str.Substring(0, Mathf.Max(0, str.Length - characters));
+    }
+
+    /// <summary>
+    /// Trims a specific number of characters off of the begining of
+    /// the provided string.  When the number of trimmed characters is
+    /// equal to or greater than the length of the string, the empty
+    /// string is always returned.
+    /// </summary>
+    public static string TrimStart(this string str, int characters) {
+      return str.Substring(Mathf.Min(str.Length, characters));
+    }
     #endregion
 
     #region Math Utils
@@ -192,6 +279,24 @@ namespace Leap.Unity {
           return new Vector3(0, vector.z, -vector.y);
         }
       }
+    }
+
+    public static bool ContainsNaN(this Vector3 v) {
+      return float.IsNaN(v.x)
+          || float.IsNaN(v.y)
+          || float.IsNaN(v.z);
+    }
+
+    public static bool IsBetween(this float f, float f0, float f1) {
+      if (f0 > f1) Utils.Swap(ref f0, ref f1);
+
+      return f0 <= f && f <= f1;
+    }
+
+    public static bool IsBetween(this double d, double d0, double d1) {
+      if (d0 > d1) Utils.Swap(ref d0, ref d1);
+
+      return d0 <= d && d <= d1;
     }
 
     #endregion
@@ -322,6 +427,96 @@ namespace Leap.Unity {
     /// </summary>
     public static Vector4 CompDiv(this Vector4 A, Vector4 B) {
       return new Vector4(A.x / B.x, A.y / B.y, A.z / B.z, A.w / B.w);
+    }
+
+    /// <summary>
+    /// Returns the sum of the components of the input vector.
+    /// </summary>
+    public static float CompSum(this Vector2 v) {
+      return v.x + v.y;
+    }
+
+    /// <summary>
+    /// Returns the sum of the components of the input vector.
+    /// </summary>
+    public static float CompSum(this Vector3 v) {
+      return v.x + v.y + v.z;
+    }
+
+    /// <summary>
+    /// Returns the sum of the components of the input vector.
+    /// </summary>
+    public static float CompSum(this Vector4 v) {
+      return v.x + v.y + v.z + v.w;
+    }
+
+    /// <summary>
+    /// Returns the largest component of the input vector.
+    /// </summary>
+    public static float CompMax(this Vector2 v) {
+      return Mathf.Max(v.x, v.y);
+    }
+
+    /// <summary>
+    /// Returns the largest component of the input vector.
+    /// </summary>
+    public static float CompMax(this Vector3 v) {
+      return Mathf.Max(Mathf.Max(v.x, v.y), v.z);
+    }
+
+    /// <summary>
+    /// Returns the largest component of the input vector.
+    /// </summary>
+    public static float CompMax(this Vector4 v) {
+      return Mathf.Max(Mathf.Max(Mathf.Max(v.x, v.y), v.z), v.w);
+    }
+
+    /// <summary>
+    /// Returns the smallest component of the input vector.
+    /// </summary>
+    public static float CompMin(this Vector2 v) {
+      return Mathf.Min(v.x, v.y);
+    }
+
+    /// <summary>
+    /// Returns the smallest component of the input vector.
+    /// </summary>
+    public static float CompMin(this Vector3 v) {
+      return Mathf.Min(Mathf.Min(v.x, v.y), v.z);
+    }
+
+    /// <summary>
+    /// Returns the smallest component of the input vector.
+    /// </summary>
+    public static float CompMin(this Vector4 v) {
+      return Mathf.Min(Mathf.Min(Mathf.Min(v.x, v.y), v.z), v.w);
+    }
+
+    #endregion
+
+    #region Unity Object Utils
+
+    /// <summary>
+    /// Usage is the same as FindObjectOfType, but this method will also return objects
+    /// that are inactive.
+    /// 
+    /// Use this method to search for singleton-pattern objects even if they are disabled,
+    /// but be warned that it's not cheap to call!
+    /// </summary>
+    public static T FindObjectInHierarchy<T>() where T : UnityEngine.Object {
+      return Resources.FindObjectsOfTypeAll<T>().Query()
+        .Where(o => {
+#if UNITY_EDITOR
+          // Exclude prefabs.
+          var prefabType = UnityEditor.PrefabUtility.GetPrefabType(o);
+          if (prefabType == UnityEditor.PrefabType.ModelPrefab
+          || prefabType == UnityEditor.PrefabType.Prefab) {
+            return false;
+          }
+#endif
+          return true;
+        })
+        .FirstOrDefault();
     }
 
     #endregion
@@ -457,15 +652,18 @@ namespace Leap.Unity {
 
     /// <summary>
     /// Recursively searches the hierarchy of the argument GameObject to find all of the
-    /// Colliders that are attached to the object's Rigidbody (or that _would_ be 
+    /// Colliders that are attached to the object's Rigidbody (or that _would_ be
     /// attached to its Rigidbody if it doesn't have one) and adds them to the provided
     /// colliders list. Warning: The provided "colliders" List will be cleared before
     /// use.
-    /// 
+    ///
     /// Colliders that are the children of other Rigidbody elements beneath the argument
-    /// object are ignored.
+    /// object are ignored. Optionally, colliders of inactive GameObjects can be included
+    /// in the returned list; by default, these colliders are skipped.
     /// </summary>
-    public static void FindColliders<T>(GameObject obj, List<T> colliders) where T : Collider {
+    public static void FindColliders<T>(GameObject obj, List<T> colliders,
+                                        bool includeInactiveObjects = false)
+                                    where T : Collider {
       colliders.Clear();
       Stack<Transform> toVisit = Pool<Stack<Transform>>.Spawn();
       List<T> collidersBuffer = Pool<List<T>>.Spawn();
@@ -482,12 +680,13 @@ namespace Leap.Unity {
           foreach (var child in curTransform.GetChildren()) {
             // Ignore children with Rigidbodies of their own; its own Rigidbody
             // owns its own colliders and the colliders of its children
-            if (child.GetComponent<Rigidbody>() == null) {
+            if (child.GetComponent<Rigidbody>() == null
+                && (includeInactiveObjects || child.gameObject.activeSelf)) {
               toVisit.Push(child);
             }
           }
 
-          // Since we'll visit every child, all we need to do is add the colliders
+          // Since we'll visit every valid child, all we need to do is add the colliders
           // of every transform we visit.
           collidersBuffer.Clear();
           curTransform.GetComponents<T>(collidersBuffer);
@@ -495,8 +694,7 @@ namespace Leap.Unity {
             colliders.Add(collider);
           }
         }
-      }
-      finally {
+      } finally {
         toVisit.Clear();
         Pool<Stack<Transform>>.Recycle(toVisit);
 
@@ -511,6 +709,60 @@ namespace Leap.Unity {
 
     public static Color WithAlpha(this Color color, float alpha) {
       return new Color(color.r, color.g, color.b, alpha);
+    }
+
+    /// <summary>
+    /// Just like ColorUtility.TryParseHtmlString but throws a useful
+    /// error message if it fails.
+    /// </summary>
+    public static Color ParseHtmlColorString(string htmlString) {
+      Color color;
+      if (!ColorUtility.TryParseHtmlString(htmlString, out color)) {
+        throw new ArgumentException("The string [" + htmlString + "] is not a valid color code.  Valid color codes include:\n" +
+                                    "#RGB\n" +
+                                    "#RGBA\n" +
+                                    "#RRGGBB\n" +
+                                    "#RRGGBBAA\n" +
+                                    "For more information, see the documentation for ColorUtility.TryParseHtmlString.");
+      }
+
+      return color;
+    }
+
+    /// <summary>
+    /// Lerps this color towards the argument color in HSV space and returns the lerped
+    /// color.
+    /// </summary>
+    public static Color LerpHSV(this Color color, Color towardsColor, float t) {
+      float h0, s0, v0;
+      Color.RGBToHSV(color, out h0, out s0, out v0);
+
+      float h1, s1, v1;
+      Color.RGBToHSV(towardsColor, out h1, out s1, out v1);
+
+      // Cyclically lerp hue. (Input hues are always between 0 and 1.)
+      if (h0 - h1 < -0.5f) h0 += 1f;
+      if (h0 - h1 > 0.5f) h1 += 1f;
+      float hL = Mathf.Lerp(h0, h1, t) % 1f;
+
+      float sL = Mathf.Lerp(s0, s1, t);
+      float vL = Mathf.Lerp(v0, v1, t);
+      return Color.HSVToRGB(hL, sL, vL);
+    }
+
+    /// <summary>
+    /// Cyclically lerps hue arguments by t.
+    /// </summary>
+    public static float LerpHue(float h0, float h1, float t) {
+      // Enforce hue values between 0f and 1f.
+      if (h0 < 0f) h0 = 1f - (-h0 % 1f);
+      if (h1 < 0f) h1 = 1f - (-h1 % 1f);
+      if (h0 > 1f) h0 = h0 % 1f;
+      if (h1 > 1f) h1 = h1 % 1f;
+
+      if (h0 - h1 < -0.5f) h0 += 1f;
+      if (h0 - h1 > 0.5f) h1 += 1f;
+      return Mathf.Lerp(h0, h1, t) % 1f;
     }
 
     #endregion
@@ -592,6 +844,25 @@ namespace Leap.Unity {
       }
 
       return Array.IndexOf(_incompressibleFormats, format) < 0;
+    }
+
+    #endregion
+
+    #region Rect Utils
+
+    /// <summary>
+    /// Returns the area of the Rect, width * height.
+    /// </summary>
+    public static float Area(this Rect rect) {
+      return rect.width * rect.height;
+    }
+
+    /// <summary>
+    /// Returns a new Rect with the argument padding as a margin relative to each
+    /// border of the provided Rect.
+    /// </summary>
+    public static Rect PadInner(this Rect r, float padding) {
+      return new Rect(r.x + padding, r.y + padding, r.width - (padding * 2), r.height - (padding * 2));
     }
 
     #endregion

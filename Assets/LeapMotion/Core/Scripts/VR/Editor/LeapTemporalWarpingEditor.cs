@@ -17,18 +17,23 @@ namespace Leap.Unity {
     protected override void OnEnable() {
       base.OnEnable();
 
-      specifyConditionalDrawing("allowManualTimeAlignment",
-                                "warpingAdjustment",
-                                "unlockHold",
-                                "moreRewind",
-                                "lessRewind");
+      specifyConditionalDrawing("_allowManualTimeAlignment",
+                                "_warpingAdjustment",
+                                "_unlockHold",
+                                "_moreRewind",
+                                "_lessRewind");
+
+      specifyConditionalDrawing("_allowManualDeviceOffset",
+                                "_deviceOffsetYAxis",
+                                "_deviceOffsetZAxis",
+                                "_deviceTiltXAxis");
 
       specifyCustomDecorator("provider", warningDecorator);
     }
 
     private void warningDecorator(SerializedProperty prop) {
       if (!PlayerSettings.virtualRealitySupported) {
-        EditorGUILayout.HelpBox("Unity VR Disabled.  ManualyUpdateTemporalWarping must be called right after " +
+        EditorGUILayout.HelpBox("Unity VR Disabled.  ManuallyUpdateTemporalWarping must be called right after " +
                                 "the Head transform has been updated.", MessageType.Warning);
       }
     }

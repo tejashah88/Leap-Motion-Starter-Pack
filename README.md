@@ -19,10 +19,10 @@ This library contains all the necessary assets for building AR/VR-based apps wit
 
 # Documentation
 * Standard library
-  * Core Assets - v4.2.1 [[docs](https://github.com/leapmotion/UnityModules/wiki/Core)]
-  * Interaction Engine - v1.0.1 [[docs](https://github.com/leapmotion/UnityModules/wiki/Interaction-Engine)]
+  * Core Assets - v4.3.2 [[docs](https://github.com/leapmotion/UnityModules/wiki/Core)]
+  * Interaction Engine - v1.1.0 [[docs](https://github.com/leapmotion/UnityModules/wiki/Interaction-Engine)]
   * Hands Module - v2.1.2 [[docs](https://github.com/leapmotion/UnityModules/wiki/Hands-Module)]
-  * Graphic Renderer - v0.1.0 [[docs](https://github.com/leapmotion/UnityModules/wiki/Graphic-Renderer)]
+  * Graphic Renderer - v0.1.1 [[docs](https://github.com/leapmotion/UnityModules/wiki/Graphic-Renderer)]
 * C# Docs - v3.2 [[docs](https://developer.leapmotion.com/documentation/csharp/index.html)]
   * Hand class - [[docs](https://developer.leapmotion.com/documentation/csharp/api/Leap.Hand.html)]
   * Vector class - [[docs](https://developer.leapmotion.com/documentation/csharp/api/Leap.Vector.html)]
@@ -91,11 +91,11 @@ public void Start() {
   StateChangeProcessor<OneHandState> oneHandScp = new StateChangeProcessor<OneHandState>();
   scp.NewRule((presentHand) => presentHand.PalmVelocity.Magnitude <= 0.5f, OneHandState.IDLE, OneHandState.MOVING);
   scp.NewRule((presentHand) => presentHand.PalmVelocity.Magnitude > 0.5f, OneHandState.MOVING, OneHandState.IDLE);
-  
+
   StateEventProcessor<OneHandState> oneHandSep = new StateEventProcessor<OneHandState>();
   sep.OnState(OneHandState.IDLE, (presentHand) => Console.Log("The hand is idle."));
   sep.OnState(OneHandState.IDLE, (presentHand) => Console.Log("The hand is moving."));
-  
+
   oneHandStateProcessor = new StateProcessor<OneHandState>(oneHandScp, oneHandSep);
 }
 
@@ -142,7 +142,7 @@ public void One(Hand presentHand) {
       oneHandState = OneHandState.IDLE;
     }
   }
-  
+
   switch (oneHandState) {
     case OneHandState.IDLE:
       Console.Log("The hand is idle.");
@@ -156,3 +156,4 @@ public void One(Hand presentHand) {
 
 # Changelog
 * v0.0.1-alpha - First release
+* v0.0.2-alpha - Updated dependencies (Core Assets, Interaction Engine, and Graphic Renderer)
