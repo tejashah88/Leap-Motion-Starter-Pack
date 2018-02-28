@@ -7,14 +7,18 @@
  * between Leap Motion and you, your company or other organization.           *
  ******************************************************************************/
 
-using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
-namespace Leap.Unity{
-  public class StretchToScreen : MonoBehaviour {
-  
-    void Awake() {
-      GetComponent<GUITexture>().pixelInset = new Rect(0.0f, 0.0f, Screen.width, Screen.height);
+namespace Leap.Unity {
+
+  public static class Type<T> {
+    public static readonly bool isValueType;
+
+    static Type() {
+      isValueType = typeof(T).IsValueType;
     }
   }
+
 }

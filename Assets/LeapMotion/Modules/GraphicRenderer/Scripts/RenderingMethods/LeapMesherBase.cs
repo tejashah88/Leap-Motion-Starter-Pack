@@ -476,8 +476,12 @@ namespace Leap.Unity.GraphicalRenderer {
             var sprite = dataObj.sprite;
             if (sprite == null) continue;
 
-            Rect rect = SpriteAtlasUtil.GetAtlasedRect(sprite);
-            _atlasUvs.SetRect(spriteFeature.channel.Index(), sprite, rect);
+            Rect rect;
+            if (SpriteAtlasUtil.TryGetAtlasedRect(sprite, out rect)) {
+              _atlasUvs.SetRect(spriteFeature.channel.Index(), sprite, rect);
+            } else {
+              _atlasUvs.SetRect(spriteFeature.channel.Index(), sprite, default(Rect));
+            }
           }
         }
       }
@@ -676,7 +680,7 @@ namespace Leap.Unity.GraphicalRenderer {
       if (mesh == null) {
         mesh = _meshes.GetMeshFromPoolOrNew();
       } else {
-        mesh.Clear();
+        mesh.Clear(keepVertexLayout: false);
       }
 
       mesh.name = "Procedural Graphic Mesh";

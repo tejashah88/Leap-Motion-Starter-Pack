@@ -7,17 +7,17 @@
  * between Leap Motion and you, your company or other organization.           *
  ******************************************************************************/
 
-using UnityEngine;
-using System.Collections;
+using System;
 
-namespace Leap.Unity{
-  public class FitHeightToScreen : MonoBehaviour {
-  
-    void Awake() {
-      float width_height_ratio = GetComponent<GUITexture>().texture.width / GetComponent<GUITexture>().texture.height;
-      float width = width_height_ratio * Screen.height;
-      float x_offset = (Screen.width - width) / 2.0f;
-      GetComponent<GUITexture>().pixelInset = new Rect(x_offset, 0.0f, width, Screen.height);
+namespace Leap.Unity {
+
+  public static class Enum<T> {
+    public static readonly string[] names;
+    public static readonly T[] values;
+
+    static Enum() {
+      names = (string[])Enum.GetNames(typeof(T));
+      values = (T[])Enum.GetValues(typeof(T));
     }
   }
 }
