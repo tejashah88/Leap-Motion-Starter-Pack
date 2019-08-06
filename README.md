@@ -2,6 +2,8 @@
 A Unity library for jump starting your VR/AR project with Leap Motion integration.
 
 # Table of Contents
+* [Leap-Motion-Starter-Pack](#leap-motion-starter-pack)
+* [Table of Contents](#table-of-contents)
 * [Introduction](#introduction)
 * [Download](#download)
 * [Documentation](#documentation)
@@ -9,20 +11,19 @@ A Unity library for jump starting your VR/AR project with Leap Motion integratio
   * [Standard Libraries](#standard-libraries)
   * [Xtra Libraries](#xtra-libraries)
   * [Examples](#examples)
-* [Changelog](#changelog)
 
 # Introduction
 This library contains all the necessary assets for building AR/VR/Desktop apps with the Leap Motion. It includes [the standard assets provided by Leap Motion](https://developer.leapmotion.com/unity) as well as a couple utilities for even easier integration.
 
 # Download
-You can checkout the [releases](https://github.com/tejashah88/Leap-Motion-Starter-Pack/releases) or simply download the latest package [here](https://github.com/tejashah88/Leap-Motion-Starter-Pack/releases/download/v0.0.3-alpha/Leap-Motion-Starter-Pack-0.0.3-alpha.unitypackage).
+You can checkout the [releases](https://github.com/tejashah88/Leap-Motion-Starter-Pack/releases) or simply download the latest package [here](https://github.com/tejashah88/Leap-Motion-Starter-Pack/releases/download/v0.0.4-alpha/Leap-Motion-Starter-Pack-0.0.4-alpha.unitypackage).
 
 # Documentation
 * Standard library
-  * Core Assets - v4.3.4 [[docs](https://github.com/leapmotion/UnityModules/wiki/Core)]
-  * Interaction Engine - v1.1.1 [[docs](https://github.com/leapmotion/UnityModules/wiki/Interaction-Engine)]
-  * Hands Module - v2.1.3 [[docs](https://github.com/leapmotion/UnityModules/wiki/Hands-Module)]
-  * Graphic Renderer - v0.1.2 [[docs](https://github.com/leapmotion/UnityModules/wiki/Graphic-Renderer)]
+  * Core Assets - v4.4.0 [[docs](https://github.com/leapmotion/UnityModules/wiki/Core)]
+  * Interaction Engine - v1.2.0 [[docs](https://github.com/leapmotion/UnityModules/wiki/Interaction-Engine)]
+  * Hands Module - v2.1.4 [[docs](https://github.com/leapmotion/UnityModules/wiki/Hands-Module)]
+  * Graphic Renderer - v0.1.3 [[docs](https://github.com/leapmotion/UnityModules/wiki/Graphic-Renderer)]
 * C# Docs - v3.2 [[docs](https://developer.leapmotion.com/documentation/csharp/index.html)]
   * Hand class - [[docs](https://developer.leapmotion.com/documentation/csharp/api/Leap.Hand.html)]
   * Vector class - [[docs](https://developer.leapmotion.com/documentation/csharp/api/Leap.Vector.html)]
@@ -37,27 +38,27 @@ The Xtra libraries contain a set of utility asssets (located in [Assets/LeapMoti
 This library was constructed with OOP/events in mind so in order to make the hands do anything, you'll have to create a separate class extending from either the `OneHandInterface` or the `TwoHandInterface` and attaching that as a component of the prefab. The interfaces themselves include methods to handle differents amounds of hands at well as transitioning states between different amounds of hands.
 
 For implementing the `OneHandInterface`, you'll need to implement the following methods:
-* Zero()
+* `Zero()`
   * fired when no hands are detected within the scene
-* TooManyHands()
+* `TooManyHands()`
   * fired when too hands are detected within the scene
-* OneToZero(float transLife)
+* `OneToZero(float transLife)`
   * fired when one of the hands has just left the scene
-* One(Hand presentHand)
+* `One(Hand presentHand)`
   * fired when one hand is detected within the scene
-* ZeroToOne(Hand futureHand, float transLife)
+* `ZeroToOne(Hand futureHand, float transLife)`
   * fired when one hand has just entered the scene
 
 For implementing the `TwoHandInterface`, you'll need to implement the following **additional** methods:
-* TwoToZero(float transLife)<sup>1</sup>
+* `TwoToZero(float transLife)`<sup>1</sup>
   * fired when **exactly** both hands have just left the scene
-* TwoToOne(Hand futureHand, float transLife)
+* `TwoToOne(Hand futureHand, float transLife)`
   * fired when one of the hands has just left the scene
-* Two(Hand[] presentHands)
+* `Two(Hand[] presentHands)`
   * fired when two hands are detected within the scene
-* ZeroToTwo(Hand[] futureHands, float transLife)<sup>1</sup>
+* `ZeroToTwo(Hand[] futureHands, float transLife)`<sup>1</sup>
   * fired when **exactly** two hands have just entered the scene
-* OneToTwo(Hand[] futureHands, float transLife)
+* `OneToTwo(Hand[] futureHands, float transLife)`
   * fired when another hand has just entered the scene
 
 <sup>1</sup>: This event is rarely fired but it's best to implement a handler for it anyways.

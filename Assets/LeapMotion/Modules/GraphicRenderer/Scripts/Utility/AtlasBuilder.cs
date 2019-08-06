@@ -1,6 +1,6 @@
 /******************************************************************************
- * Copyright (C) Leap Motion, Inc. 2011-2017.                                 *
- * Leap Motion proprietary and  confidential.                                 *
+ * Copyright (C) Leap Motion, Inc. 2011-2018.                                 *
+ * Leap Motion proprietary and confidential.                                  *
  *                                                                            *
  * Use subject to the terms of the Leap Motion SDK Agreement available at     *
  * https://developer.leapmotion.com/sdk_agreement, or another agreement       *
@@ -192,7 +192,7 @@ namespace Leap.Unity.GraphicalRenderer {
 
     /// <summary>
     /// Actually perform the build for the atlas.  This method outputs the atlas textures, and the atlas
-    /// uvs that map textures into the atlas.  This method takes in a progress bar so that the atlas 
+    /// uvs that map textures into the atlas.  This method takes in a progress bar so that the atlas
     /// process can be tracked visually, since it can take quite a bit of time when there are a lot of
     /// textures to pack.
     /// </summary>
@@ -340,7 +340,7 @@ namespace Leap.Unity.GraphicalRenderer {
 
             progress.Step("Compressing Texture");
 #if UNITY_EDITOR
-            UnityEditor.EditorUtility.CompressTexture(tex, _format, TextureCompressionQuality.Best);
+            UnityEditor.EditorUtility.CompressTexture(tex, _format, UnityEditor.TextureCompressionQuality.Best);
 #endif
             tex.filterMode = _filterMode;
 
@@ -381,7 +381,11 @@ namespace Leap.Unity.GraphicalRenderer {
         }
       }
 
-      packedTexture = new Texture2D(1, 1, TextureFormat.ARGB32, mipmap: false, linear: true);
+      #if UNITY_2018_2_OR_NEWER
+        packedTexture = new Texture2D(1, 1, TextureFormat.ARGB32, mipChain: false, linear: true);
+      #else
+        packedTexture = new Texture2D(1, 1, TextureFormat.ARGB32, mipmap: false, linear: true);
+      #endif
       packedTexture.filterMode = _filterMode;
     }
 
@@ -442,7 +446,11 @@ namespace Leap.Unity.GraphicalRenderer {
     private Texture2D getDefaultTexture(Color color) {
       Texture2D texture;
       if (!_cachedDefaultTextures.TryGetValue(color, out texture)) {
-        texture = new Texture2D(3, 3, TextureFormat.ARGB32, mipmap: false);
+        #if UNITY_2018_2_OR_NEWER
+          texture = new Texture2D(3, 3, TextureFormat.ARGB32, mipChain: false);
+        #else
+          texture = new Texture2D(3, 3, TextureFormat.ARGB32, mipmap: false);
+        #endif
         texture.SetPixels(new Color[3 * 3].Fill(color));
         _cachedDefaultTextures[color] = texture;
       }
